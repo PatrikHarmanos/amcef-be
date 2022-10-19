@@ -1,0 +1,34 @@
+version: '3.8'
+
+services:
+    app:
+      container_name: react-fe
+      image: patrikharmanos/amcef-fe
+      build:
+        context: .
+        target: development
+      volumes:
+        - ./src:/app/src
+      ports:
+        - 3000:3000
+
+    dev:
+        container_name: nestjs_api_dev
+        image: patrikharmanos/amcef-be
+        build:
+            context: .
+            target: development
+            dockerfile: ./Dockerfile
+        command: npm run start:debug
+        ports:
+            - 4000:4000
+            - 9229:9229
+        networks:
+            - nesjs-network
+        volumes:
+            - .:/usr/src/app
+            - /usr/src/app/node_modules
+        restart: unless-stopped
+
+networks:
+    nesjs-network:
